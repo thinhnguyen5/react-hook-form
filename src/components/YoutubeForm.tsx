@@ -37,8 +37,17 @@ const YoutubeForm = () => {
     },
   });
 
-  const { register, control, handleSubmit, formState, watch, getValues } = form;
-  const { errors } = formState;
+  const {
+    register,
+    control,
+    handleSubmit,
+    formState,
+    watch,
+    getValues,
+    setValue,
+  } = form;
+  const { errors, touchedFields, dirtyFields } = formState;
+//   console.log({ touchedFields, dirtyFields });
   //   const { name, ref, onChange, onBlur } = register("username");
 
   const { fields, append, remove } = useFieldArray({
@@ -51,7 +60,15 @@ const YoutubeForm = () => {
   };
 
   const handleGetValues = () => {
-    console.log("Get values", getValues("social.twitter"))
+    // console.log("Get values", getValues("social.twitter"));
+  };
+
+  const handleSetValues = () => {
+    setValue("username", "", {
+        shouldValidate: true,
+        shouldDirty: true,
+        shouldTouch: true
+    })
   }
 
   useEffect(() => {
@@ -138,7 +155,10 @@ const YoutubeForm = () => {
 
         <div className="form-control">
           <label htmlFor="twitter">Twitter</label>
-          <input type="text" id="twitter" {...register("social.twitter")} />
+          <input type="text" id="twitter" {...register("social.twitter", {
+            disabled: watch("password") === "",
+            required: "Enter twitter profile"
+          })} />
           <p className="error">{errors.password?.message}</p>
         </div>
 
@@ -225,7 +245,15 @@ const YoutubeForm = () => {
         </div>
 
         <button>Submit</button>
-        <button onClick={handleGetValues}>Get Values</button>
+
+        <button type="button" onClick={handleGetValues}>
+          Get Values
+        </button>
+
+        <button type="button" onClick={handleSetValues}>
+          Set Values
+        </button>
+
       </form>
       <DevTool control={control} />
     </div>
