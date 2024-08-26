@@ -7,15 +7,23 @@ type FormValues = {
   username: string;
   email: string;
   password: string;
+  social: {
+    twitter: string;
+    facebook: string;
+  };
 };
 
 const YoutubeForm = () => {
   const form = useForm<FormValues>({
     defaultValues: {
-        username: "Batman",
-        email: "",
-        password: "",
-    }
+      username: "Batman",
+      email: "",
+      password: "",
+      social: {
+        twitter: "",
+        facebook: "",
+      },
+    },
   });
   const { register, control, handleSubmit, formState } = form;
   const { errors } = formState;
@@ -58,6 +66,10 @@ const YoutubeForm = () => {
                 value: /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/,
                 message: "Invalid email format",
               },
+              required: {
+                value: true,
+                message: "Username is required",
+              },
               validate: {
                 notAdmin: (fieldValue) => {
                   return (
@@ -89,6 +101,18 @@ const YoutubeForm = () => {
               },
             })}
           />
+          <p className="error">{errors.password?.message}</p>
+        </div>
+
+        <div className="form-control">
+          <label htmlFor="twitter">Twitter</label>
+          <input type="text" id="twitter" {...register("social.twitter")} />
+          <p className="error">{errors.password?.message}</p>
+        </div>
+
+        <div className="form-control">
+          <label htmlFor="facebook">Facebook</label>
+          <input type="text" id="facebook" {...register("social.facebook")} />
           <p className="error">{errors.password?.message}</p>
         </div>
         <button>Submit</button>
