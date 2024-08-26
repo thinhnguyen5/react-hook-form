@@ -10,7 +10,13 @@ type FormValues = {
 };
 
 const YoutubeForm = () => {
-  const form = useForm<FormValues>();
+  const form = useForm<FormValues>({
+    defaultValues: {
+        username: "Batman",
+        email: "",
+        password: "",
+    }
+  });
   const { register, control, handleSubmit, formState } = form;
   const { errors } = formState;
   //   const { name, ref, onChange, onBlur } = register("username");
