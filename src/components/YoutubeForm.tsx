@@ -37,7 +37,7 @@ const YoutubeForm = () => {
     },
   });
 
-  const { register, control, handleSubmit, formState, watch } = form;
+  const { register, control, handleSubmit, formState, watch, getValues } = form;
   const { errors } = formState;
   //   const { name, ref, onChange, onBlur } = register("username");
 
@@ -50,9 +50,13 @@ const YoutubeForm = () => {
     console.log("Form submitted", data);
   };
 
+  const handleGetValues = () => {
+    console.log("Get values", getValues("social.twitter"))
+  }
+
   useEffect(() => {
     const subscription = watch((value) => {
-      console.log(value);
+      //console.log(value);
     });
     return () => subscription.unsubscribe();
   }, [watch]);
@@ -217,10 +221,11 @@ const YoutubeForm = () => {
               },
             })}
           />
-          <p className="error">{errors.age?.message}</p>
+          <p className="error">{errors.dob?.message}</p>
         </div>
 
         <button>Submit</button>
+        <button onClick={handleGetValues}>Get Values</button>
       </form>
       <DevTool control={control} />
     </div>
