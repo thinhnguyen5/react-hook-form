@@ -4,10 +4,10 @@ import { DevTool } from "@hookform/devtools";
 let renderCount = 0;
 
 type FormValues = {
-    username: string;
-    email: string;
-    password: string;
-}
+  username: string;
+  email: string;
+  password: string;
+};
 
 const YoutubeForm = () => {
   const form = useForm<FormValues>();
@@ -15,8 +15,8 @@ const YoutubeForm = () => {
   //   const { name, ref, onChange, onBlur } = register("username");
 
   const onSubmit = (data: FormValues) => {
-    console.log('Form submitted', data)
-  }
+    console.log("Form submitted", data);
+  };
   renderCount++;
   return (
     <div>
@@ -30,11 +30,25 @@ const YoutubeForm = () => {
           //   ref={ref}
           //   onChange={onChange}
           //   onBlur={onBlur}
-          {...register("username")}
+          {...register("username", {
+            required: {
+              value: true,
+              message: "Username is required",
+            },
+          })}
         />
 
         <label htmlFor="email">Email</label>
-        <input type="text" id="email" {...register("email")} />
+        <input
+          type="text"
+          id="email"
+          {...register("email", {
+            pattern: {
+              value: /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/,
+              message: "Invalid email format",
+            },
+          })}
+        />
 
         <label htmlFor="password">Password</label>
         <input type="password" id="password" {...register("password")} />
