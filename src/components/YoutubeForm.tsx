@@ -11,7 +11,8 @@ type FormValues = {
 
 const YoutubeForm = () => {
   const form = useForm<FormValues>();
-  const { register, control, handleSubmit } = form;
+  const { register, control, handleSubmit, formState } = form;
+  const { errors } = formState;
   //   const { name, ref, onChange, onBlur } = register("username");
 
   const onSubmit = (data: FormValues) => {
@@ -22,36 +23,54 @@ const YoutubeForm = () => {
     <div>
       <h1>YoutubeForm ({renderCount / 2})</h1>
       <form onSubmit={handleSubmit(onSubmit)}>
-        <label htmlFor="userName">Username</label>
-        <input
-          type="text"
-          id="username"
-          //   name={name}
-          //   ref={ref}
-          //   onChange={onChange}
-          //   onBlur={onBlur}
-          {...register("username", {
-            required: {
-              value: true,
-              message: "Username is required",
-            },
-          })}
-        />
+        <div className="form-control">
+          <label htmlFor="userName">Username</label>
+          <input
+            type="text"
+            id="username"
+            //   name={name}
+            //   ref={ref}
+            //   onChange={onChange}
+            //   onBlur={onBlur}
+            {...register("username", {
+              required: {
+                value: true,
+                message: "Username is required",
+              },
+            })}
+          />
+          <p className="error">{errors.username?.message}</p>
+        </div>
 
-        <label htmlFor="email">Email</label>
-        <input
-          type="text"
-          id="email"
-          {...register("email", {
-            pattern: {
-              value: /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/,
-              message: "Invalid email format",
-            },
-          })}
-        />
+        <div className="form-control">
+          <label htmlFor="email">Email</label>
+          <input
+            type="text"
+            id="email"
+            {...register("email", {
+              pattern: {
+                value: /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/,
+                message: "Invalid email format",
+              },
+            })}
+          />
+          <p className="error">{errors.email?.message}</p>
+        </div>
 
-        <label htmlFor="password">Password</label>
-        <input type="password" id="password" {...register("password")} />
+        <div className="form-control">
+          <label htmlFor="password">Password</label>
+          <input
+            type="password"
+            id="password"
+            {...register("password", {
+              required: {
+                value: true,
+                message: "Password is required",
+              },
+            })}
+          />
+          <p className="error">{errors.password?.message}</p>
+        </div>
         <button>Submit</button>
       </form>
       <DevTool control={control} />
