@@ -1,5 +1,6 @@
-import { useForm } from "react-hook-form";
+import { useForm, useFieldArray } from "react-hook-form";
 import { DevTool } from "@hookform/devtools";
+import { useEffect } from "react";
 
 let renderCount = 0;
 
@@ -12,6 +13,11 @@ type FormValues = {
     facebook: string;
   };
   phoneNumbers: string[];
+  phNumbers: {
+    number: string;
+  }[];
+  age: number;
+  dob: Date;
 };
 
 const YoutubeForm = () => {
@@ -25,19 +31,39 @@ const YoutubeForm = () => {
         facebook: "",
       },
       phoneNumbers: ["", ""],
+      phNumbers: [{ number: "" }],
+      age: 0,
+      dob: new Date(),
     },
   });
-  const { register, control, handleSubmit, formState } = form;
+
+  const { register, control, handleSubmit, formState, watch } = form;
   const { errors } = formState;
   //   const { name, ref, onChange, onBlur } = register("username");
+
+  const { fields, append, remove } = useFieldArray({
+    name: "phNumbers",
+    control,
+  });
 
   const onSubmit = (data: FormValues) => {
     console.log("Form submitted", data);
   };
+
+  useEffect(() => {
+    const subscription = watch((value) => {
+      console.log(value);
+    });
+    return () => subscription.unsubscribe();
+  }, [watch]);
+
+  //   const watchUsername = watch("username")
   renderCount++;
   return (
     <div>
       <h1>YoutubeForm ({renderCount / 2})</h1>
+      {/* <h2>Watched value: {watchUsername}</h2> */}
+
       <form onSubmit={handleSubmit(onSubmit)}>
         <div className="form-control">
           <label htmlFor="userName">Username</label>
@@ -136,6 +162,62 @@ const YoutubeForm = () => {
             {...register("phoneNumbers.1")}
           />
           <p className="error">{errors.password?.message}</p>
+        </div>
+
+        <div>
+          <h2>List of phone numbers</h2>
+          <div>
+            {fields.map((field, index) => {
+              return (
+                <div className="form-control" key={field.id}>
+                  <input
+                    type="text"
+                    {...register(`phNumbers.${index}.number` as const)}
+                  />
+                  {index > 0 && (
+                    <button type="button" onClick={() => remove(index)}>
+                      Remove
+                    </button>
+                  )}
+                </div>
+              );
+            })}
+
+            <button type="button" onClick={() => append({ number: "" })}>
+              Add a number
+            </button>
+          </div>
+        </div>
+
+        <div className="form-control">
+          <label htmlFor="age">Age</label>
+          <input
+            type="number"
+            id="age"
+            {...register("age", {
+              valueAsNumber: true,
+              required: {
+                value: true,
+                message: "Age is required",
+              },
+            })}
+          />
+          <p className="error">{errors.age?.message}</p>
+        </div>
+
+        <div className="form-control">
+          <label htmlFor="dob">Date of birth</label>
+          <input
+            type="date"
+            id="dob"
+            {...register("dob", {
+              required: {
+                value: true,
+                message: "Date of birth is required",
+              },
+            })}
+          />
+          <p className="error">{errors.age?.message}</p>
         </div>
 
         <button>Submit</button>
