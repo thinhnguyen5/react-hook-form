@@ -46,8 +46,23 @@ const YoutubeForm = () => {
     getValues,
     setValue,
   } = form;
-  const { errors, touchedFields, dirtyFields, isDirty, isValid } = formState;
-  console.log({ touchedFields, dirtyFields, isDirty, isValid });
+  const {
+    errors,
+    touchedFields,
+    dirtyFields,
+    isDirty,
+    isValid,
+    isSubmitting,
+    isSubmitted,
+    isSubmitSuccessful,
+    submitCount
+  } = formState;
+  console.log({
+    isSubmitting,
+    isSubmitted,
+    isSubmitSuccessful,
+    submitCount
+  });
   //   const { name, ref, onChange, onBlur } = register("username");
 
   const { fields, append, remove } = useFieldArray({
@@ -61,7 +76,7 @@ const YoutubeForm = () => {
 
   const onError = (errors: FieldErrors<FormValues>) => {
     console.log("Form errors", errors);
-  }
+  };
 
   const handleGetValues = () => {
     // console.log("Get values", getValues("social.twitter"));
@@ -252,7 +267,7 @@ const YoutubeForm = () => {
           <p className="error">{errors.dob?.message}</p>
         </div>
 
-        <button disabled={!isDirty || !isValid}>Submit</button>
+        <button disabled={!isDirty || !isValid || isSubmitting}>Submit</button>
 
         <button type="button" onClick={handleGetValues}>
           Get Values
