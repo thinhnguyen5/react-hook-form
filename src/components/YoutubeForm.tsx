@@ -1,4 +1,4 @@
-import { useForm, useFieldArray } from "react-hook-form";
+import { useForm, useFieldArray, FieldErrors } from "react-hook-form";
 import { DevTool } from "@hookform/devtools";
 import { useEffect } from "react";
 
@@ -47,7 +47,7 @@ const YoutubeForm = () => {
     setValue,
   } = form;
   const { errors, touchedFields, dirtyFields } = formState;
-//   console.log({ touchedFields, dirtyFields });
+  // console.log({ touchedFields, dirtyFields });
   //   const { name, ref, onChange, onBlur } = register("username");
 
   const { fields, append, remove } = useFieldArray({
@@ -59,17 +59,21 @@ const YoutubeForm = () => {
     console.log("Form submitted", data);
   };
 
+  const onError = (errors: FieldErrors<FormValues>) => {
+    console.log("Form errors", errors);
+  }
+
   const handleGetValues = () => {
     // console.log("Get values", getValues("social.twitter"));
   };
 
   const handleSetValues = () => {
     setValue("username", "", {
-        shouldValidate: true,
-        shouldDirty: true,
-        shouldTouch: true
-    })
-  }
+      shouldValidate: true,
+      shouldDirty: true,
+      shouldTouch: true,
+    });
+  };
 
   useEffect(() => {
     const subscription = watch((value) => {
@@ -85,7 +89,7 @@ const YoutubeForm = () => {
       <h1>YoutubeForm ({renderCount / 2})</h1>
       {/* <h2>Watched value: {watchUsername}</h2> */}
 
-      <form onSubmit={handleSubmit(onSubmit)}>
+      <form onSubmit={handleSubmit(onSubmit, onError)}>
         <div className="form-control">
           <label htmlFor="userName">Username</label>
           <input
@@ -155,10 +159,14 @@ const YoutubeForm = () => {
 
         <div className="form-control">
           <label htmlFor="twitter">Twitter</label>
-          <input type="text" id="twitter" {...register("social.twitter", {
-            disabled: watch("password") === "",
-            required: "Enter twitter profile"
-          })} />
+          <input
+            type="text"
+            id="twitter"
+            {...register("social.twitter", {
+              disabled: watch("password") === "",
+              required: "Enter twitter profile",
+            })}
+          />
           <p className="error">{errors.password?.message}</p>
         </div>
 
@@ -253,7 +261,6 @@ const YoutubeForm = () => {
         <button type="button" onClick={handleSetValues}>
           Set Values
         </button>
-
       </form>
       <DevTool control={control} />
     </div>
