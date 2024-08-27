@@ -45,6 +45,7 @@ const YoutubeForm = () => {
     watch,
     getValues,
     setValue,
+    reset
   } = form;
   const {
     errors,
@@ -96,6 +97,12 @@ const YoutubeForm = () => {
     });
     return () => subscription.unsubscribe();
   }, [watch]);
+
+  useEffect(() => {
+    if (isSubmitSuccessful) {
+      reset();
+    }
+  })
 
   //   const watchUsername = watch("username")
   renderCount++;
@@ -268,6 +275,8 @@ const YoutubeForm = () => {
         </div>
 
         <button disabled={!isDirty || !isValid || isSubmitting}>Submit</button>
+
+        <button type="button" onClick={() => reset()}>Reset</button>
 
         <button type="button" onClick={handleGetValues}>
           Get Values
